@@ -6,13 +6,17 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import Exceptions.BadRequestException;
+
 @Service
 public class UsersService {
 	@Autowired
 	private UsersRepository usersRepo;
 
 	public User create(User u) {
-		// TODO: check if email already exists
+		usersRepo.findByEmail(u.getEmail()).ifPresent(user -> {
+			throw new BadRequestException("email" + u.getEmail() + "already in use");
+		});
 
 		return usersRepo.save(u);
 	}
