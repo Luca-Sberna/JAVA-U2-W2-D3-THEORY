@@ -10,18 +10,19 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import Exceptions.BadRequestException;
+import users.payload.UserRegistrationPayload;
 
 @Service
 public class UsersService {
 	@Autowired
 	private UsersRepository usersRepo;
 
-	public User create(User u) {
+	public User create(UserRegistrationPayload u) {
 		usersRepo.findByEmail(u.getEmail()).ifPresent(user -> {
 			throw new BadRequestException("email" + u.getEmail() + "already in use");
 		});
-
-		return usersRepo.save(u);
+		User newUser = new User(u.getEmail(), u.getName(), u.getSurname());
+		return usersRepo.save(newUser);
 	}
 
 	public List<User> find(int page, int size, String sortBy) {
