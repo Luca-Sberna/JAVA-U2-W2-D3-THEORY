@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,8 +23,9 @@ public class UsersController {
 	private UsersService usersService;
 
 	@GetMapping("")
-	public List<User> getUsers() {
-		return usersService.find();
+	public List<User> getUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
+			@RequestParam(defaultValue = "id") String sortBy) {
+		return usersService.find(page, size, sortBy);
 	}
 
 	@PostMapping("")

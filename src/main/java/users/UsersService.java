@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import Exceptions.BadRequestException;
@@ -21,8 +24,13 @@ public class UsersService {
 		return usersRepo.save(u);
 	}
 
-	public List<User> find() {
-		return usersRepo.findAll();
+	public List<User> find(int page, int size, String sortBy) {
+		if (size < 0)
+			size = 10;
+		if (size > 100)
+			size = 100;
+		Pageable pageable = PageRequest.of(page, 10, Sort.by(sortBy));
+		return usersRepo.findAll(pageable).getContent();
 	}
 
 	public User findById(UUID id) throws Exception {
